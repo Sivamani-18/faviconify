@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface FaviconifyProps {
   fontFamily?: string;
@@ -21,6 +21,8 @@ const Faviconify: React.FC<FaviconifyProps> = ({
   textContent = 'S',
   imageUrl,
 }) => {
+  const faviconLinkRef = useRef<HTMLLinkElement | null>(null);
+
   useEffect(() => {
     let base64Favicon: string;
 
@@ -87,17 +89,10 @@ const Faviconify: React.FC<FaviconifyProps> = ({
       }
     }
 
-    // Remove existing favicon links
-    const existingFavicons = document.querySelectorAll('link[rel="icon"]');
-    existingFavicons.forEach((favicon) => {
-      if (favicon && favicon.parentNode) {
-        try {
-          favicon.parentNode.removeChild(favicon);
-        } catch (error) {
-          console.error('Failed to remove favicon:', error);
-        }
-      }
-    });
+    // Remove existing favicon link if it exists
+    if (faviconLinkRef.current) {
+      faviconLinkRef.current.remove();
+    }
 
     // Add the new favicon
     const link = document.createElement('link');
@@ -105,6 +100,17 @@ const Faviconify: React.FC<FaviconifyProps> = ({
     link.type = imageUrl?.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
     link.href = base64Favicon;
     document.head.appendChild(link);
+
+    // Store the created link element in the ref
+    faviconLinkRef.current = link;
+
+    // Cleanup function to remove the favicon when the component unmounts or updates
+    return () => {
+      if (faviconLinkRef.current) {
+        faviconLinkRef.current.remove();
+        faviconLinkRef.current = null;
+      }
+    };
   }, [
     fontFamily,
     textColor,

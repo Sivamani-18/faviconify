@@ -1,6 +1,6 @@
 {
   "name": "faviconify",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "private": false,
   "description": "A customizable React library for dynamically generating favicons.",
   "main": "dist/bundle.js",
