@@ -3,3 +3,5 @@
 
 tsconfig.json
 tsup.config.ts
+rollup.config.js
+package.json
