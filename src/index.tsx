@@ -19,18 +19,16 @@ const Faviconify: React.FC<FaviconifyProps> = ({
   fontWeight = '400',
   textSize = 200,
   textContent = 'S',
-  imageUrl, // Accepting the new prop
+  imageUrl,
 }) => {
   useEffect(() => {
     let base64Favicon: string;
 
     if (imageUrl) {
-      // If src is provided, use it as the favicon
+      // Use provided image URL as favicon
       base64Favicon = imageUrl;
-
-      console.log('base64Favicon', base64Favicon);
     } else {
-      // Otherwise, generate the favicon
+      // Generate the favicon
       const canvas = document.createElement('canvas');
       canvas.width = 256;
       canvas.height = 256;
@@ -91,9 +89,11 @@ const Faviconify: React.FC<FaviconifyProps> = ({
 
     // Remove existing favicon links
     const existingFavicons = document.querySelectorAll('link[rel="icon"]');
-    existingFavicons.forEach((favicon) =>
-      favicon.parentNode?.removeChild(favicon)
-    );
+    existingFavicons.forEach((favicon) => {
+      if (favicon.parentNode) {
+        favicon.parentNode.removeChild(favicon);
+      }
+    });
 
     // Add the new favicon
     const link = document.createElement('link');
