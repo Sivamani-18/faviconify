@@ -90,8 +90,12 @@ const Faviconify: React.FC<FaviconifyProps> = ({
     // Remove existing favicon links
     const existingFavicons = document.querySelectorAll('link[rel="icon"]');
     existingFavicons.forEach((favicon) => {
-      if (favicon.parentNode) {
-        favicon.parentNode.removeChild(favicon);
+      if (favicon && favicon.parentNode) {
+        try {
+          favicon.parentNode.removeChild(favicon);
+        } catch (error) {
+          console.error('Failed to remove favicon:', error);
+        }
       }
     });
 
